@@ -21,7 +21,36 @@ class Home extends StatelessWidget {
           size: 18
         ),),
       ),
-      body: Container(),
+      body: Padding(
+
+        padding: const EdgeInsets.all(8.0),
+        child: ListView.builder(
+          itemCount: 100,
+            itemBuilder: (BuildContext context, int index){
+            return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12)
+                ),
+                child: ListTile(
+                  title: Text('Music Name',
+                  strutStyle: textStyle(
+                    family: bold,
+                    size: 15
+                  ),
+                  ),
+                  subtitle: Text('Artist Name',
+                  strutStyle: textStyle(
+                      family:regular,
+                      size: 12
+                  ),
+                ),
+                  leading: Icon(Icons.music_note, color: whiteColor,size: 32,),
+                  trailing: Icon(Icons.play_arrow, color: whiteColor, size: 26,),
+                )
+            );
+          }
+          ),
+      ),
     );
   }
 }
