@@ -9,9 +9,16 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){
+
+          }, icon: const Icon(Icons.search, color: bgColor,))
+        ],
+        leading: const Icon(Icons.sort_rounded,color: bgColor,),
         title: Text('Beats',
         style: textStyle(
-          family: bold
+          family: bold,
+          size: 18
         ),),
       ),
       body: Container(),
