@@ -8,21 +8,21 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgDarkColor,
       appBar: AppBar(
         actions: [
           IconButton(onPressed: (){
-
-          }, icon: const Icon(Icons.search, color: bgColor,))
+          }, icon: const Icon(Icons.search, color: whiteColor,))
         ],
-        leading: const Icon(Icons.sort_rounded,color: bgColor,),
+        leading: const Icon(Icons.sort_rounded,color: whiteColor,),
         title: Text('Beats',
-        style: textStyle(
+        style: myTextStyle(
           family: bold,
-          size: 18
+          size: 18,
+          color: whiteColor
         ),),
       ),
       body: Padding(
-
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
           itemCount: 100,
@@ -33,15 +33,17 @@ class Home extends StatelessWidget {
                 ),
                 child: ListTile(
                   title: Text('Music Name',
-                  strutStyle: textStyle(
+                  strutStyle: myTextStyle(
                     family: bold,
-                    size: 15
+                    size: 15,
+                      color: whiteColor
                   ),
                   ),
                   subtitle: Text('Artist Name',
-                  strutStyle: textStyle(
+                  strutStyle: myTextStyle(
                       family:regular,
-                      size: 12
+                      size: 12,
+                    color: whiteColor
                   ),
                 ),
                   leading: Icon(Icons.music_note, color: whiteColor,size: 32,),

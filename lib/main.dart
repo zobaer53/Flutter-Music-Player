@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_player/consts/colors.dart';
 import 'package:flutter_music_player/views/home.dart';
 
 void main() {
@@ -12,12 +13,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        fontFamily: 'reqular',
+        //fontFamily: 'reqular',
         appBarTheme: const AppBarTheme(
-           backgroundColor: Colors.transparent,
-          elevation: 0
+           backgroundColor: bgDarkColor,
+          //elevation: 0
         )
       ),
       home:const Home() ,
