@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_music_player/consts/colors.dart';
-import 'package:flutter_music_player/consts/text_style.dart';
+import '../consts/text_style.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -19,7 +19,6 @@ class Home extends StatelessWidget {
         style: myTextStyle(
           family: bold,
           size: 18,
-          color: whiteColor
         ),),
       ),
       body: Padding(
@@ -33,17 +32,15 @@ class Home extends StatelessWidget {
                 ),
                 child: ListTile(
                   title: Text('Music Name',
-                  strutStyle: myTextStyle(
+                  style: myTextStyle(
                     family: bold,
                     size: 15,
-                      color: whiteColor
                   ),
                   ),
                   subtitle: Text('Artist Name',
-                  strutStyle: myTextStyle(
+                  style: myTextStyle(
                       family:regular,
                       size: 12,
-                    color: whiteColor
                   ),
                 ),
                   leading: Icon(Icons.music_note, color: whiteColor,size: 32,),
