@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PlayerController extends GetxController{
 
   final audioQuery = OnAudioQuery();
+  final audiPlayer = AudioPlayer();
 
   @override
 
@@ -23,4 +25,16 @@ class PlayerController extends GetxController{
       checkPermission();
     }
   }
+  playSong(String? uri){
+   try{
+     audiPlayer.setAudioSource(
+         AudioSource.uri(Uri.parse(uri!))
+     );
+     audiPlayer.play();
+   }on Exception catch(e){
+
+     print(e);
+   }
+  }
+
 }
