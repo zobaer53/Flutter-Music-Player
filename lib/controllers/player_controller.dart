@@ -7,17 +7,18 @@ class PlayerController extends GetxController{
   final audioQuery = OnAudioQuery();
 
   @override
+
   void onInit() {
     super.onInit();
     checkPermission();
   }
-
    checkPermission() async {
 
     //grand storage permission
-    var permission = await Permission.storage.request();
+    var permissionStorage = await Permission.storage.request();
+    var permissionAudio = await Permission.audio.request();
 
-    if(permission.isGranted){
+    if(permissionStorage.isGranted && permissionAudio.isGranted){
     }else {
       checkPermission();
     }
