@@ -65,42 +65,48 @@ class Home extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                         margin: const EdgeInsets.symmetric(vertical: 4),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          tileColor: bgColor,
-                          title: Text(
-                            '${snapshot.data![index].displayNameWOExt}',
-                            style: myTextStyle(
-                              family: bold,
-                              size: 15,
+                        child: Obx(
+                            () => ListTile(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            tileColor: bgColor,
+                            title: Text(
+                              '${snapshot.data![index].displayNameWOExt}',
+                              style: myTextStyle(
+                                family: bold,
+                                size: 15,
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            '${snapshot.data![index].artist}',
-                            style: myTextStyle(
-                              family: regular,
-                              size: 12,
+                            subtitle: Text(
+                              '${snapshot.data![index].artist}',
+                              style: myTextStyle(
+                                family: regular,
+                                size: 12,
+                              ),
                             ),
-                          ),
-                          leading: QueryArtworkWidget(
-                            id: snapshot.data![index].id,
-                            type: ArtworkType.AUDIO,
-                            nullArtworkWidget: const Icon(
-                              Icons.music_note,
+                            leading: QueryArtworkWidget(
+                              id: snapshot.data![index].id,
+                              type: ArtworkType.AUDIO,
+                              nullArtworkWidget: const Icon(
+                                Icons.music_note,
+                                color: whiteColor,
+                                size: 32,
+                              ),
+                            ),
+                            trailing: playerController.playIndex.value == index && playerController.isPlaying.value? const Icon(
+                              Icons.pause,
                               color: whiteColor,
-                              size: 32,
+                              size: 26,
+                            ) :
+                            const Icon(
+                              Icons.play_arrow,
+                              color: whiteColor,
+                              size: 26,
                             ),
+                            onTap: (){
+                              playerController.playSong(snapshot.data![index].uri,index);
+                            },
                           ),
-                          trailing: const Icon(
-                            Icons.play_arrow,
-                            color: whiteColor,
-                            size: 26,
-                          ),
-                          onTap: (){
-
-                            playerController.playSong(snapshot.data![index].uri);
-                          },
                         ));
                   }),
             );

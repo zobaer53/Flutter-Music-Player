@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -7,6 +8,9 @@ class PlayerController extends GetxController{
 
   final audioQuery = OnAudioQuery();
   final audiPlayer = AudioPlayer();
+
+  var  playIndex= 0.obs;
+  var isPlaying = false.obs;
 
   @override
 
@@ -25,15 +29,20 @@ class PlayerController extends GetxController{
       checkPermission();
     }
   }
-  playSong(String? uri){
+  playSong(String? uri,index){
+    playIndex.value = index;
    try{
      audiPlayer.setAudioSource(
          AudioSource.uri(Uri.parse(uri!))
      );
      audiPlayer.play();
-   }on Exception catch(e){
+     isPlaying = true.obs;
 
-     print(e);
+   }on Exception catch(e){
+     isPlaying = false.obs;
+     if (kDebugMode) {
+       print(e);
+     }
    }
   }
 
