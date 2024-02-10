@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_music_player/consts/colors.dart';
 import 'package:flutter_music_player/controllers/player_controller.dart';
+import 'package:flutter_music_player/views/player.dart';
 import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../consts/text_style.dart';
@@ -71,7 +72,7 @@ class Home extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12)),
                             tileColor: bgColor,
                             title: Text(
-                              '${snapshot.data![index].displayNameWOExt}',
+                              snapshot.data![index].displayNameWOExt,
                               style: myTextStyle(
                                 family: bold,
                                 size: 15,
@@ -88,23 +89,20 @@ class Home extends StatelessWidget {
                               id: snapshot.data![index].id,
                               type: ArtworkType.AUDIO,
                               nullArtworkWidget: const Icon(
-                                Icons.music_note,
+                                Icons.play_circle,
                                 color: whiteColor,
                                 size: 32,
                               ),
                             ),
-                            trailing: playerController.playIndex.value == index && playerController.isPlaying.value? const Icon(
+                            trailing: playerController.playIndex.value == index && playerController.isPlaying.value?
+                            const Icon(
                               Icons.pause,
                               color: whiteColor,
                               size: 26,
-                            ) :
-                            const Icon(
-                              Icons.play_arrow,
-                              color: whiteColor,
-                              size: 26,
-                            ),
+                            ) : null,
                             onTap: (){
-                              playerController.playSong(snapshot.data![index].uri,index);
+                              Get.to(()=> PlayerScreen());
+                              //playerController.playSong(snapshot.data![index].uri,index);
                             },
                           ),
                         ));
