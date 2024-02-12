@@ -44,13 +44,30 @@ class PlayerScreen extends StatelessWidget {
                     style: myTextStyle(size: 18, color: bgDarkColor,),
                   ),
                   SizedBox(height: 12,),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Text('0:0', style: myTextStyle(color: bgDarkColor),),
+                        Expanded(child: Slider(value: 0.0, onChanged: (newValue){})),
+                        Text('04:00', style: myTextStyle(color: bgDarkColor),),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12,),
                   Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('00:00', style: myTextStyle(),),
-                      Slider(value: 0.0, onChanged: (newValue){}),
-                      Text('04:00', style: myTextStyle(),),
-                    ],
-                  )
+                    IconButton(onPressed: () {  }, icon: Icon(Icons.skip_previous_outlined),),
+                    Transform.scale(
+                        scale: 2,
+                        child: CircleAvatar(
+                            backgroundColor: bgColor,
+                            child: IconButton(onPressed: () {  }, icon: Icon(Icons.play_arrow,color: whiteColor,),))),
+                    IconButton(onPressed: () {  }, icon: Icon(Icons.skip_next_outlined),),
+                  ],)
+
                 ],
               ),
             ),
