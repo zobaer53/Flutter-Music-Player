@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_music_player/consts/colors.dart';
 import 'package:flutter_music_player/consts/text_style.dart';
+import 'package:get/get.dart';
+import 'package:on_audio_query/on_audio_query.dart';
+import 'package:on_audio_query_platform_interface/src/models/song_model.dart';
+import '../controllers/player_controller.dart';
 
 class PlayerScreen extends StatelessWidget {
-  const PlayerScreen({super.key});
+  const PlayerScreen( {super.key, required this.selectedSong});
+
+  final SongModel selectedSong;
 
   @override
   Widget build(BuildContext context) {
+    var playerController = Get.put(PlayerController());
+
+
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(),
@@ -16,13 +25,20 @@ class PlayerScreen extends StatelessWidget {
           children: [
             Expanded(child:
             Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              height: 300,
+              width: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.red,
               ),
               alignment: Alignment.center,
 
-              child: Icon(Icons.play_circle),
+              child: QueryArtworkWidget(
+                id: selectedSong.id, type: ArtworkType.AUDIO,
+                artworkWidth: double.infinity,
+                artworkHeight: double.infinity,
+                nullArtworkWidget: Icon(Icons.music_note, size: 48,color: whiteColor,),
+              ),
             ),
             ),
             const SizedBox(height: 12,),
@@ -36,11 +52,11 @@ class PlayerScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Text('Music Name',
+                  Text(selectedSong.displayNameWOExt,
                     style: myTextStyle(size: 24, color: bgDarkColor,family: bold),
                   ),
                   SizedBox(height: 12,),
-                  Text('Artist Name',
+                  Text(selectedSong.artist!,
                     style: myTextStyle(size: 18, color: bgDarkColor,),
                   ),
                   SizedBox(height: 12,),
@@ -49,7 +65,11 @@ class PlayerScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         Text('0:0', style: myTextStyle(color: bgDarkColor),),
-                        Expanded(child: Slider(value: 0.0, onChanged: (newValue){})),
+                        Expanded(child: Slider(
+                            activeColor: sliderColor,
+                            inactiveColor: bgDarkColor,
+
+                            value: 0.0, onChanged: (newValue){})),
                         Text('04:00', style: myTextStyle(color: bgDarkColor),),
                       ],
                     ),
@@ -62,9 +82,20 @@ class PlayerScreen extends StatelessWidget {
                     IconButton(onPressed: () {  }, icon: Icon(Icons.skip_previous_outlined),),
                     Transform.scale(
                         scale: 2,
-                        child: CircleAvatar(
-                            backgroundColor: bgColor,
-                            child: IconButton(onPressed: () {  }, icon: Icon(Icons.play_arrow,color: whiteColor,),))),
+                        child: Obx(
+                            () => CircleAvatar(
+                              backgroundColor: bgColor,
+                              child: IconButton(onPressed: () {
+                               if(playerController.isPlaying.value){
+                                 playerController.audiPlayer.pause();
+                                 playerController.isPlaying.value = false;
+                               }else{
+                                 playerController.audiPlayer.play();
+                                 playerController.isPlaying.value = true;
+                               }
+
+                              }, icon: Icon( playerController.isPlaying.value? Icons.pause : Icons.play_arrow,color: whiteColor,),)),
+                        )),
                     IconButton(onPressed: () {  }, icon: Icon(Icons.skip_next_outlined),),
                   ],)
 

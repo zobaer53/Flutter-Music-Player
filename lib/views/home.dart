@@ -89,7 +89,7 @@ class Home extends StatelessWidget {
                               id: snapshot.data![index].id,
                               type: ArtworkType.AUDIO,
                               nullArtworkWidget: const Icon(
-                                Icons.play_circle,
+                                Icons.music_note,
                                 color: whiteColor,
                                 size: 32,
                               ),
@@ -101,8 +101,8 @@ class Home extends StatelessWidget {
                               size: 26,
                             ) : null,
                             onTap: (){
-                              Get.to(()=> PlayerScreen());
-                              //playerController.playSong(snapshot.data![index].uri,index);
+                              Get.to(()=> PlayerScreen(selectedSong: snapshot.data![index]));
+                              playerController.playSong(snapshot.data![index].uri, snapshot.data![index].id);
                             },
                           ),
                         ));
