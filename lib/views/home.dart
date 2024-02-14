@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_player/consts/colors.dart';
 import 'package:flutter_music_player/controllers/player_controller.dart';
@@ -101,8 +102,11 @@ class Home extends StatelessWidget {
                               size: 26,
                             ) : null,
                             onTap: (){
-                              Get.to(()=> PlayerScreen(selectedSong: snapshot.data![index]));
-                              playerController.playSong(snapshot.data![index].uri, snapshot.data![index].id);
+                              if (kDebugMode) {
+                                print('index from player ${snapshot.data![playerController.playIndex.value].id}');
+                              }
+                              Get.to(()=> PlayerScreen(songList: snapshot.data!));
+                              playerController.playSong(snapshot.data![index].uri, index);
                             },
                           ),
                         ));

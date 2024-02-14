@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_player/consts/colors.dart';
 import 'package:flutter_music_player/consts/text_style.dart';
@@ -7,15 +8,18 @@ import 'package:on_audio_query_platform_interface/src/models/song_model.dart';
 import '../controllers/player_controller.dart';
 
 class PlayerScreen extends StatelessWidget {
-  const PlayerScreen( {super.key, required this.selectedSong});
+  const PlayerScreen( {super.key, required this.songList});
 
-  final SongModel selectedSong;
+  final List<SongModel> songList;
 
   @override
   Widget build(BuildContext context) {
     var playerController = Get.put(PlayerController());
+    var currentSongIndex =  playerController.playIndex.value;
 
-
+    if (kDebugMode) {
+      print('index from controller ${songList[currentSongIndex].id}');
+    }
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(),
@@ -34,7 +38,7 @@ class PlayerScreen extends StatelessWidget {
               alignment: Alignment.center,
 
               child: QueryArtworkWidget(
-                id: selectedSong.id, type: ArtworkType.AUDIO,
+                id: songList[currentSongIndex].id, type: ArtworkType.AUDIO,
                 artworkWidth: double.infinity,
                 artworkHeight: double.infinity,
                 nullArtworkWidget: Icon(Icons.music_note, size: 48,color: whiteColor,),
@@ -52,26 +56,32 @@ class PlayerScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Text(selectedSong.displayNameWOExt,
+                  Text(songList[playerController.playIndex.value].displayNameWOExt,
                     style: myTextStyle(size: 24, color: bgDarkColor,family: bold),
                   ),
                   SizedBox(height: 12,),
-                  Text(selectedSong.artist!,
+                  Text(songList[playerController.playIndex.value].artist!,
                     style: myTextStyle(size: 18, color: bgDarkColor,),
                   ),
                   SizedBox(height: 12,),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Text('0:0', style: myTextStyle(color: bgDarkColor),),
-                        Expanded(child: Slider(
-                            activeColor: sliderColor,
-                            inactiveColor: bgDarkColor,
-
-                            value: 0.0, onChanged: (newValue){})),
-                        Text('04:00', style: myTextStyle(color: bgDarkColor),),
-                      ],
+                    child: Obx(
+                      ()=> Row(
+                        children: [
+                          Text(playerController.position.value, style: myTextStyle(color: bgDarkColor),),
+                          Expanded(child: Slider(
+                              activeColor: sliderColor,
+                              inactiveColor: bgDarkColor,
+                              min: Duration(seconds: 0).inSeconds.toDouble(),
+                              max: playerController.durationInDouble.value,
+                              value: playerController.positionToDouble.value, onChanged: (newValue){
+                                playerController.changeDurationToString(newValue.toInt());
+                                newValue = newValue;
+                          })),
+                          Text(playerController.duration.value, style: myTextStyle(color: bgDarkColor),),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 12,),
@@ -79,7 +89,11 @@ class PlayerScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                    IconButton(onPressed: () {  }, icon: Icon(Icons.skip_previous_outlined),),
+                    IconButton(onPressed: () {
+                      //--playerController.playIndex.value;
+                      playerController.playSong(songList[playerController.playIndex.value].uri, playerController.playIndex.value);
+
+                    }, icon: Icon(Icons.skip_previous_outlined,size: 40,),),
                     Transform.scale(
                         scale: 2,
                         child: Obx(
@@ -96,7 +110,7 @@ class PlayerScreen extends StatelessWidget {
 
                               }, icon: Icon( playerController.isPlaying.value? Icons.pause : Icons.play_arrow,color: whiteColor,),)),
                         )),
-                    IconButton(onPressed: () {  }, icon: Icon(Icons.skip_next_outlined),),
+                    IconButton(onPressed: () {  }, icon: Icon(Icons.skip_next_outlined,size: 40,),),
                   ],)
 
                 ],
