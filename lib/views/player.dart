@@ -101,8 +101,14 @@ class PlayerScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                       IconButton(onPressed: () {
-                        --currentSongIndex.value;
-                        playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
+                        if(currentSongIndex.value == 0){
+                          currentSongIndex.value = songList.length-1;
+                          playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
+                        }else{
+                          --currentSongIndex.value;
+                          playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
+                        }
+
 
                       }, icon: Icon(Icons.skip_previous_outlined,size: 40,),),
                       Transform.scale(
@@ -122,8 +128,13 @@ class PlayerScreen extends StatelessWidget {
                                 }, icon: Icon( playerController.isPlaying.value? Icons.pause : Icons.play_arrow,color: whiteColor,),)),
                           )),
                       IconButton(onPressed: () {
-                        ++currentSongIndex.value;
-                        playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
+                       if(currentSongIndex.value == songList.length-1){
+                         currentSongIndex.value=0;
+                         playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
+                       }else{
+                         ++currentSongIndex.value;
+                         playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
+                       }
 
                       }, icon: Icon(Icons.skip_next_outlined,size: 40,),),
                     ],)
