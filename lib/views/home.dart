@@ -74,6 +74,8 @@ class Home extends StatelessWidget {
                             tileColor: bgColor,
                             title: Text(
                               snapshot.data![index].displayNameWOExt,
+                              overflow: TextOverflow.clip,
+                              maxLines: 1,
                               style: myTextStyle(
                                 family: bold,
                                 size: 15,
@@ -106,7 +108,9 @@ class Home extends StatelessWidget {
                                 print('index from player ${snapshot.data![playerController.playIndex.value].id}');
                               }
                               Get.to(()=> PlayerScreen(songList: snapshot.data!));
-                              playerController.playSong(snapshot.data![index].uri, index);
+                             if(playerController.isPlaying.isFalse || playerController.playIndex.value != index){
+                               playerController.playSong(snapshot.data![index].uri, index);
+                             }
                             },
                           ),
                         ));

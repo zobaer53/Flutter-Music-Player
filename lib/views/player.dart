@@ -15,17 +15,22 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var playerController = Get.put(PlayerController());
-    var currentSongIndex =  playerController.playIndex.value;
+    var currentSongIndex =  playerController.playIndex;
 
     if (kDebugMode) {
-      print('index from controller ${songList[currentSongIndex].id}');
+      print('index from controller ${songList[currentSongIndex.value].id}');
     }
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(),
+      appBar: AppBar(leading:
+        IconButton(onPressed: (){
+ Get.back();
+        }, icon: Icon(Icons.arrow_back,color: whiteColor,))
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+    child:Obx(
+    () => Column(
           children: [
             Expanded(child:
             Container(
@@ -38,7 +43,7 @@ class PlayerScreen extends StatelessWidget {
               alignment: Alignment.center,
 
               child: QueryArtworkWidget(
-                id: songList[currentSongIndex].id, type: ArtworkType.AUDIO,
+                id: songList[currentSongIndex.value].id, type: ArtworkType.AUDIO,
                 artworkWidth: double.infinity,
                 artworkHeight: double.infinity,
                 nullArtworkWidget: Icon(Icons.music_note, size: 48,color: whiteColor,),
@@ -54,72 +59,83 @@ class PlayerScreen extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 color: whiteColor,
               ),
-              child: Column(
-                children: [
-                  Text(songList[playerController.playIndex.value].displayNameWOExt,
-                    style: myTextStyle(size: 24, color: bgDarkColor,family: bold),
-                  ),
-                  SizedBox(height: 12,),
-                  Text(songList[playerController.playIndex.value].artist!,
-                    style: myTextStyle(size: 18, color: bgDarkColor,),
-                  ),
-                  SizedBox(height: 12,),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Obx(
-                      ()=> Row(
-                        children: [
-                          Text(playerController.position.value, style: myTextStyle(color: bgDarkColor),),
-                          Expanded(child: Slider(
-                              activeColor: sliderColor,
-                              inactiveColor: bgDarkColor,
-                              min: Duration(seconds: 0).inSeconds.toDouble(),
-                              max: playerController.durationInDouble.value,
-                              value: playerController.positionToDouble.value, onChanged: (newValue){
-                                playerController.changeDurationToString(newValue.toInt());
-                                newValue = newValue;
-                          })),
-                          Text(playerController.duration.value, style: myTextStyle(color: bgDarkColor),),
-                        ],
+              child:  Column(
+                  children: [
+                    Text(songList[currentSongIndex.value].displayNameWOExt,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: myTextStyle(size: 24, color: bgDarkColor,family: bold),
+                    ),
+                    SizedBox(height: 12,),
+                    Text(songList[playerController.playIndex.value].artist!,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: myTextStyle(size: 18, color: bgDarkColor,),
+                    ),
+                    SizedBox(height: 12,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Obx(
+                        ()=> Row(
+                          children: [
+                            Text(playerController.position.value, style: myTextStyle(color: bgDarkColor),),
+                            Expanded(child: Slider(
+                                activeColor: sliderColor,
+                                inactiveColor: bgDarkColor,
+                                min: Duration(seconds: 0).inSeconds.toDouble(),
+                                max: playerController.durationInDouble.value,
+                                value: playerController.positionToDouble.value, onChanged: (newValue){
+                                  playerController.changeDurationToString(newValue.toInt());
+                                  newValue = newValue;
+                            })),
+                            Text(playerController.duration.value, style: myTextStyle(color: bgDarkColor),),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 12,),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                    IconButton(onPressed: () {
-                      //--playerController.playIndex.value;
-                      playerController.playSong(songList[playerController.playIndex.value].uri, playerController.playIndex.value);
+                    SizedBox(height: 12,),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                      IconButton(onPressed: () {
+                        --currentSongIndex.value;
+                        playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
 
-                    }, icon: Icon(Icons.skip_previous_outlined,size: 40,),),
-                    Transform.scale(
-                        scale: 2,
-                        child: Obx(
-                            () => CircleAvatar(
-                              backgroundColor: bgColor,
-                              child: IconButton(onPressed: () {
-                               if(playerController.isPlaying.value){
-                                 playerController.audiPlayer.pause();
-                                 playerController.isPlaying.value = false;
-                               }else{
-                                 playerController.audiPlayer.play();
-                                 playerController.isPlaying.value = true;
-                               }
+                      }, icon: Icon(Icons.skip_previous_outlined,size: 40,),),
+                      Transform.scale(
+                          scale: 2,
+                          child: Obx(
+                              () => CircleAvatar(
+                                backgroundColor: bgColor,
+                                child: IconButton(onPressed: () {
+                                 if(playerController.isPlaying.value){
+                                   playerController.audiPlayer.pause();
+                                   playerController.isPlaying.value = false;
+                                 }else{
+                                   playerController.audiPlayer.play();
+                                   playerController.isPlaying.value = true;
+                                 }
 
-                              }, icon: Icon( playerController.isPlaying.value? Icons.pause : Icons.play_arrow,color: whiteColor,),)),
-                        )),
-                    IconButton(onPressed: () {  }, icon: Icon(Icons.skip_next_outlined,size: 40,),),
-                  ],)
+                                }, icon: Icon( playerController.isPlaying.value? Icons.pause : Icons.play_arrow,color: whiteColor,),)),
+                          )),
+                      IconButton(onPressed: () {
+                        ++currentSongIndex.value;
+                        playerController.playSong(songList[currentSongIndex.value].uri, currentSongIndex.value);
 
-                ],
+                      }, icon: Icon(Icons.skip_next_outlined,size: 40,),),
+                    ],)
+
+                  ],
+                ),
               ),
-            ),
             ),
           ],
         ),
       ),
+      )
     );
   }
 }
