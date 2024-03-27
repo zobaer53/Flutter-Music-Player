@@ -70,11 +70,10 @@ class _HomeState extends State<Home> {
               );
             } else if (snapshot.data!.isEmpty) {
               return Center(
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    color: Colors.red,
-                  ));
+                  child: Text(
+                'No Song Found',
+                style: myTextStyle(),
+              ));
             } else {
               print(snapshot.data);
               return Padding(
@@ -137,11 +136,11 @@ class _HomeState extends State<Home> {
             }
           },
         ) : SizedBox(
-            child: Container(
-              height: 100,
-              width: 100,
-              color: Colors.orange,
-            ),
+            child: Center(
+                child: Text(
+                  'No Song Found',
+                  style: myTextStyle(),
+                )),
           ),
       ),
     );
