@@ -17,11 +17,13 @@ class PlayerController extends GetxController{
   var positionToDouble = 0.0.obs;
   var durationInDouble = 0.0.obs;
 
+  var audioPermissionGranted = false.obs;
+
   @override
 
   void onInit() {
     super.onInit();
-    checkPermission();
+    //checkPermission();
   }
 
   updateDuration(){
@@ -41,13 +43,14 @@ class PlayerController extends GetxController{
     audiPlayer.seek(duration);
   }
 
-   checkPermission() async {
+    checkPermission() async {
 
     //grand storage permission
     var permissionStorage = await Permission.storage.request();
     var permissionAudio = await Permission.audio.request();
 
-    if(permissionStorage.isGranted && permissionAudio.isGranted){
+    if(permissionStorage.isGranted || permissionAudio.isGranted){
+      audioPermissionGranted.value = true;
     }else {
       checkPermission();
     }

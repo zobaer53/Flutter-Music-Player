@@ -3,6 +3,8 @@ import 'package:flutter_music_player/consts/colors.dart';
 import 'package:flutter_music_player/views/home.dart';
 import 'package:get/get.dart';
 
+import 'controllers/player_controller.dart';
+
 void main() {
   runApp(const MyApp());
 }
