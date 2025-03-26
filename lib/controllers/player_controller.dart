@@ -1,79 +1,88 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../models/song_model.dart';
 
-class PlayerController extends GetxController{
-
-  final audioQuery = OnAudioQuery();
-  final audiPlayer = AudioPlayer();
-
-  var  playIndex= 0.obs;
+class PlayerController extends GetxController {
+  var playIndex = 0.obs;
   var isPlaying = false.obs;
-  var duration = ''.obs;
-  var position = ''.obs;
+  var duration = '00:00'.obs;
+  var position = '00:00'.obs;
 
   var positionToDouble = 0.0.obs;
-  var durationInDouble = 0.0.obs;
+  var durationInDouble = 1.0.obs; // Default to 1 to avoid division by zero
 
   var audioPermissionGranted = false.obs;
+  var songsList = <SongModel>[].obs;
 
   @override
-
   void onInit() {
     super.onInit();
-    //checkPermission();
+    // Skip permission check in this simplified version
+    audioPermissionGranted.value = true;
+    _addDummySongs();
   }
 
-  updateDuration(){
-    audiPlayer.durationStream.listen((event) {
-      duration.value = event.toString().split('.')[0];
-      durationInDouble.value = event!.inSeconds.toDouble();
-    });
-
-    audiPlayer.positionStream.listen((event) {
-      position.value = event.toString().split('.')[0];
-      positionToDouble.value = event.inSeconds.toDouble();
-    });
+  changeDurationToString(seconds) {
+    // Mock function, would normally seek to position
+    positionToDouble.value = seconds.toDouble();
+    position.value = _formatDuration(Duration(seconds: seconds));
   }
 
-  changeDurationToString(seconds){
-    var duration = Duration(seconds: seconds);
-    audiPlayer.seek(duration);
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "$twoDigitMinutes:$twoDigitSeconds";
   }
 
-    checkPermission() async {
-
-    //grand storage permission
-    var permissionStorage = await Permission.storage.request();
-    var permissionAudio = await Permission.audio.request();
-
-    if(permissionStorage.isGranted || permissionAudio.isGranted){
-      audioPermissionGranted.value = true;
-    }else {
-      checkPermission();
-    }
+  checkPermission() async {
+    // Simplified permission check that always passes
+    audioPermissionGranted.value = true;
+    _addDummySongs();
   }
-  playSong(String? uri,index){
+
+  _addDummySongs() {
+    // Add some dummy songs for testing
+    songsList.add(
+      SongModel(
+        id: 1,
+        displayNameWOExt: "Demo Song 1",
+        artist: "Demo Artist",
+        uri: "https://example.com/song1.mp3",
+      ),
+    );
+    songsList.add(
+      SongModel(
+        id: 2,
+        displayNameWOExt: "Demo Song 2",
+        artist: "Demo Artist",
+        uri: "https://example.com/song2.mp3",
+      ),
+    );
+    songsList.add(
+      SongModel(
+        id: 3,
+        displayNameWOExt: "Demo Song 3",
+        artist: "Demo Artist",
+        uri: "https://example.com/song3.mp3",
+      ),
+    );
+  }
+
+  playSong(String? uri, index) {
     playIndex.value = index;
     if (kDebugMode) {
-      print('index from controller ${playIndex.value}');
+      print('Playing mock song at index: ${playIndex.value}');
     }
-   try{
-     audiPlayer.setAudioSource(
-         AudioSource.uri(Uri.parse(uri!))
-     );
-     audiPlayer.play();
-     isPlaying = true.obs;
-     updateDuration();
-
-   }on Exception catch(e){
-     isPlaying = false.obs;
-     if (kDebugMode) {
-       print(e);
-     }
-   }
+    // Mock behavior to simulate playing
+    isPlaying.value = true;
+    // Mock duration set
+    durationInDouble.value = 180.0; // 3 minutes
+    duration.value = "03:00";
   }
 
+  pausePlay() {
+    isPlaying.value = !isPlaying.value;
+  }
 }
